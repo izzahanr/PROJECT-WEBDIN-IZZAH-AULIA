@@ -1,0 +1,36 @@
+# Dependency directories
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Production builds
+build/
+dist/
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Uploaded files
+backend/uploads/
+uploads/
+
+# Migration script (hanya untuk development lokal)
+backend/src/migrate.ts
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docx module files (not needed in repo)
+*.docx
