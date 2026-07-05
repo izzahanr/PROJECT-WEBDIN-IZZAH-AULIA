@@ -12,6 +12,7 @@ import {
   MahasiswaInput,
   updateMahasiswa,
 } from "@/lib/api";
+import { isLoggedIn, logout, getUser } from "@/lib/auth";
 
 export default function MahasiswaPage() {
   const [mahasiswa, setMahasiswa] = useState<Mahasiswa[]>([]);
@@ -19,13 +20,22 @@ export default function MahasiswaPage() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const user = getUser();
+
+  useEffect(() => {
+    if (!isLoggedIn()) {
+      window.location.href = "/login";
+      return;
+    }
+    loadMahasiswa();
+  }, []);
 
   const loadMahasiswa = async () => {
     try {
       setLoading(true);
       setError("");
-      const data = await getMahasiswa();
-      setMahasiswa(data);
+      const result = await getMahasiswa();
+      setMahasiswa(result.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal mengambil data mahasiswa");
     } finally {
@@ -33,15 +43,10 @@ export default function MahasiswaPage() {
     }
   };
 
-  useEffect(() => {
-    loadMahasiswa();
-  }, []);
-
   const handleSubmit = async (payload: MahasiswaInput) => {
     try {
       setMessage("");
       setError("");
-
       if (selectedMahasiswa) {
         await updateMahasiswa(selectedMahasiswa.id, payload);
         setMessage("Data mahasiswa berhasil diperbarui");
@@ -49,7 +54,6 @@ export default function MahasiswaPage() {
         await createMahasiswa(payload);
         setMessage("Data mahasiswa berhasil ditambahkan");
       }
-
       setSelectedMahasiswa(null);
       await loadMahasiswa();
     } catch (err) {
@@ -60,7 +64,6 @@ export default function MahasiswaPage() {
   const handleDelete = async (id: number) => {
     const confirmed = window.confirm("Yakin ingin menghapus data ini?");
     if (!confirmed) return;
-
     try {
       setMessage("");
       setError("");
@@ -77,12 +80,19 @@ export default function MahasiswaPage() {
       <div className="header">
         <div>
           <h1>CRUD Data Mahasiswa</h1>
-          <p>Frontend Next.js yang terhubung ke backend Express.js.</p>
+          <p>
+            Frontend Next.js yang terhubung ke backend Express.js.
+            {user && <span> Login sebagai: <strong>{user.name || user.email}</strong> ({user.role})</span>}
+          </p>
         </div>
-
-        <Link href="/">
-          <button className="btn-secondary">Kembali</button>
-        </Link>
+        <div className="actions">
+          <Link href="/">
+            <button className="btn-secondary">Kembali</button>
+          </Link>
+          <button className="btn-danger" onClick={logout}>
+            Logout
+          </button>
+        </div>
       </div>
 
       {message && <div className="message">{message}</div>}

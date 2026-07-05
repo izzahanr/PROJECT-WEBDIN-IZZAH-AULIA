@@ -2,18 +2,19 @@ CREATE DATABASE IF NOT EXISTS kampus;
 
 USE kampus;
 
--- Hapus tabel mahasiswa terlebih dahulu karena bergantung pada prodi
+-- Hapus tabel yang bergantung terlebih dahulu
 DROP TABLE IF EXISTS mahasiswa;
 DROP TABLE IF EXISTS prodi;
+DROP TABLE IF EXISTS users;
 
--- Membuat tabel prodi
+-- Tabel prodi
 CREATE TABLE IF NOT EXISTS prodi (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nama VARCHAR(100) NOT NULL UNIQUE,
   kode VARCHAR(20) NOT NULL UNIQUE
 );
 
--- Membuat tabel mahasiswa dengan relasi ke prodi dan field foto
+-- Tabel mahasiswa dengan relasi ke prodi dan field foto
 CREATE TABLE IF NOT EXISTS mahasiswa (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nim VARCHAR(20) NOT NULL UNIQUE,
@@ -23,6 +24,17 @@ CREATE TABLE IF NOT EXISTS mahasiswa (
   foto VARCHAR(255) NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (prodi_id) REFERENCES prodi(id) ON DELETE RESTRICT
+);
+
+-- Tabel users untuk autentikasi (Pertemuan 13)
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  role ENUM('admin', 'operator', 'viewer') NOT NULL DEFAULT 'viewer',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Seed data prodi

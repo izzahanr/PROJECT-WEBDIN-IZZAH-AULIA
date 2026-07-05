@@ -7,13 +7,15 @@ import {
   deleteMahasiswa 
 } from '../controllers/mahasiswa.controller';
 import { uploadFotoMahasiswa } from '../middlewares/upload.middleware';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.get('/', getMahasiswa);
-router.get('/:id', getMahasiswaById);
-router.post('/', uploadFotoMahasiswa.single('foto'), createMahasiswa);
-router.put('/:id', uploadFotoMahasiswa.single('foto'), updateMahasiswa);
-router.delete('/:id', deleteMahasiswa);
+// Semua endpoint mahasiswa dilindungi dengan authMiddleware (Pertemuan 13)
+router.get('/', authMiddleware, getMahasiswa);
+router.get('/:id', authMiddleware, getMahasiswaById);
+router.post('/', authMiddleware, uploadFotoMahasiswa.single('foto'), createMahasiswa);
+router.put('/:id', authMiddleware, uploadFotoMahasiswa.single('foto'), updateMahasiswa);
+router.delete('/:id', authMiddleware, deleteMahasiswa);
 
 export default router;
