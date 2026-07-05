@@ -1,6 +1,7 @@
 "use client";
 
 import { Mahasiswa } from "@/lib/api";
+import { getUser } from "@/lib/auth";
 
 type Props = {
   mahasiswa: Mahasiswa[];
@@ -9,6 +10,12 @@ type Props = {
 };
 
 export default function MahasiswaTable({ mahasiswa, onEdit, onDelete }: Props) {
+  const user = getUser();
+  const role = user?.role;
+  const canEdit = role === "admin" || role === "operator";
+  const canDelete = role === "admin";
+  const showAksi = canEdit || canDelete;
+
   if (mahasiswa.length === 0) {
     return <p>Belum ada data mahasiswa.</p>;
   }
@@ -22,7 +29,7 @@ export default function MahasiswaTable({ mahasiswa, onEdit, onDelete }: Props) {
           <th>Nama</th>
           <th>Prodi</th>
           <th>Angkatan</th>
-          <th>Aksi</th>
+          {showAksi && <th>Aksi</th>}
         </tr>
       </thead>
 
@@ -34,17 +41,22 @@ export default function MahasiswaTable({ mahasiswa, onEdit, onDelete }: Props) {
             <td>{item.nama}</td>
             <td>{item.prodi}</td>
             <td>{item.angkatan}</td>
-            <td>
-              <div className="actions">
-                <button className="btn-secondary" onClick={() => onEdit(item)}>
-                  Edit
-                </button>
-
-                <button className="btn-danger" onClick={() => onDelete(item.id)}>
-                  Hapus
-                </button>
-              </div>
-            </td>
+            {showAksi && (
+              <td>
+                <div className="actions">
+                  {canEdit && (
+                    <button className="btn-secondary" onClick={() => onEdit(item)}>
+                      Edit
+                    </button>
+                  )}
+                  {canDelete && (
+                    <button className="btn-danger" onClick={() => onDelete(item.id)}>
+                      Hapus
+                    </button>
+                  )}
+                </div>
+              </td>
+            )}
           </tr>
         ))}
       </tbody>

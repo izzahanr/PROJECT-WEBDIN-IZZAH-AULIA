@@ -21,6 +21,8 @@ export default function MahasiswaPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const user = getUser();
+  const role = user?.role;
+  const canCreate = role === "admin" || role === "operator";
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -82,7 +84,11 @@ export default function MahasiswaPage() {
           <h1>CRUD Data Mahasiswa</h1>
           <p>
             Frontend Next.js yang terhubung ke backend Express.js.
-            {user && <span> Login sebagai: <strong>{user.name || user.email}</strong> ({user.role})</span>}
+            {user && (
+              <span>
+                {" "}Login sebagai: <strong>{user.name || user.email}</strong> ({user.role})
+              </span>
+            )}
           </p>
         </div>
         <div className="actions">
@@ -98,11 +104,23 @@ export default function MahasiswaPage() {
       {message && <div className="message">{message}</div>}
       {error && <div className="message error">{error}</div>}
 
-      <MahasiswaForm
-        selectedMahasiswa={selectedMahasiswa}
-        onSubmit={handleSubmit}
-        onCancelEdit={() => setSelectedMahasiswa(null)}
-      />
+      {/* Form hanya tampil untuk admin dan operator */}
+      {canCreate && (
+        <MahasiswaForm
+          selectedMahasiswa={selectedMahasiswa}
+          onSubmit={handleSubmit}
+          onCancelEdit={() => setSelectedMahasiswa(null)}
+        />
+      )}
+
+      {/* Viewer hanya bisa melihat tabel */}
+      {!canCreate && (
+        <div className="card" style={{ marginBottom: 20 }}>
+          <p style={{ color: "#6b7280" }}>
+            🔒 Anda login sebagai <strong>{role}</strong>. Hanya dapat melihat data mahasiswa.
+          </p>
+        </div>
+      )}
 
       <section className="card" style={{ marginTop: 20 }}>
         <h2>Daftar Mahasiswa</h2>
