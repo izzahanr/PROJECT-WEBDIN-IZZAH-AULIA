@@ -25,6 +25,7 @@ export default function MahasiswaTable({ mahasiswa, onEdit, onDelete }: Props) {
       <thead>
         <tr>
           <th>No</th>
+          <th>Foto</th>
           <th>NIM</th>
           <th>Nama</th>
           <th>Prodi</th>
@@ -37,9 +38,20 @@ export default function MahasiswaTable({ mahasiswa, onEdit, onDelete }: Props) {
         {mahasiswa.map((item, index) => (
           <tr key={item.id}>
             <td>{index + 1}</td>
+            <td>
+              {item.foto ? (
+                <img
+                  src={`http://localhost:3000/uploads/mahasiswa/${item.foto}`}
+                  alt="Foto Mahasiswa"
+                  style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }}
+                />
+              ) : (
+                <span style={{ color: "#aaa" }}>Tidak ada foto</span>
+              )}
+            </td>
             <td>{item.nim}</td>
             <td>{item.nama}</td>
-            <td>{item.prodi}</td>
+            <td>{item.prodi_nama} ({item.prodi_kode})</td>
             <td>{item.angkatan}</td>
             {showAksi && (
               <td>

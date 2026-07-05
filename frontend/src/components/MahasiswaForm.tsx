@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { Mahasiswa, MahasiswaInput } from "@/lib/api";
+import { Mahasiswa, MahasiswaInput, Prodi, getProdi } from "@/lib/api";
 
 type Props = {
   selectedMahasiswa: Mahasiswa | null;
@@ -12,8 +12,9 @@ type Props = {
 const initialForm: MahasiswaInput = {
   nim: "",
   nama: "",
-  prodi: "",
+  prodi_id: 0,
   angkatan: new Date().getFullYear(),
+  foto: null,
 };
 
 export default function MahasiswaForm({
@@ -23,14 +24,21 @@ export default function MahasiswaForm({
 }: Props) {
   const [form, setForm] = useState<MahasiswaInput>(initialForm);
   const [loading, setLoading] = useState(false);
+  const [prodiList, setProdiList] = useState<Prodi[]>([]);
+
+  useEffect(() => {
+    // Load prodi list
+    getProdi().then(setProdiList).catch(console.error);
+  }, []);
 
   useEffect(() => {
     if (selectedMahasiswa) {
       setForm({
         nim: selectedMahasiswa.nim,
         nama: selectedMahasiswa.nama,
-        prodi: selectedMahasiswa.prodi,
+        prodi_id: selectedMahasiswa.prodi_id,
         angkatan: selectedMahasiswa.angkatan,
+        foto: null, // Jangan set file dari string foto lama
       });
     } else {
       setForm(initialForm);
@@ -42,8 +50,14 @@ export default function MahasiswaForm({
     setLoading(true);
 
     try {
+      if (form.prodi_id === 0 && prodiList.length > 0) {
+        form.prodi_id = prodiList[0].id;
+      }
       await onSubmit(form);
       setForm(initialForm);
+      // Reset input file manually
+      const fileInput = document.getElementById("foto") as HTMLInputElement;
+      if (fileInput) fileInput.value = "";
     } finally {
       setLoading(false);
     }
@@ -77,14 +91,20 @@ export default function MahasiswaForm({
         </div>
 
         <div className="form-group">
-          <label htmlFor="prodi">Prodi</label>
-          <input
-            id="prodi"
-            value={form.prodi}
-            onChange={(e) => setForm({ ...form, prodi: e.target.value })}
-            placeholder="Informatika"
+          <label htmlFor="prodi_id">Prodi</label>
+          <select
+            id="prodi_id"
+            value={form.prodi_id}
+            onChange={(e) => setForm({ ...form, prodi_id: Number(e.target.value) })}
             required
-          />
+          >
+            <option value={0} disabled>Pilih Program Studi</option>
+            {prodiList.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.nama} ({p.kode})
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">
@@ -97,6 +117,18 @@ export default function MahasiswaForm({
               setForm({ ...form, angkatan: Number(e.target.value) })
             }
             required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="foto">Foto (Opsional)</label>
+          <input
+            id="foto"
+            type="file"
+            accept="image/*"
+            onChange={(e) =>
+              setForm({ ...form, foto: e.target.files ? e.target.files[0] : null })
+            }
           />
         </div>
       </div>
