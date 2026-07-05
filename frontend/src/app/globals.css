@@ -5,7 +5,7 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: #f5f7fb;
+  background: #fff0f5; /* Light pink */
   color: #1f2937;
 }
 
@@ -21,11 +21,11 @@ a {
 }
 
 .card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #ffffff; /* White card */
+  border: 1px solid #fbcfe8; /* Soft pink border */
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 16px rgba(244, 114, 182, 0.1);
 }
 
 .header {
@@ -52,36 +52,55 @@ a {
 label {
   font-size: 14px;
   font-weight: 600;
+  color: #9d174d; /* Dark pink */
 }
 
-input {
-  border: 1px solid #d1d5db;
+input, select {
+  border: 1px solid #fbcfe8;
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 14px;
+  background-color: #ffffff;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #f472b6;
+  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.2);
 }
 
 button {
-  border: none;
+  border: 1px solid transparent;
   border-radius: 8px;
   padding: 10px 14px;
   cursor: pointer;
   font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .btn-primary {
-  background: #2563eb;
+  background: #f472b6; /* Pink 400 */
   color: white;
+}
+.btn-primary:hover {
+  background: #db2777; /* Pink 600 */
 }
 
 .btn-secondary {
-  background: #e5e7eb;
-  color: #111827;
+  background: #ffffff;
+  color: #db2777;
+  border-color: #fbcfe8;
+}
+.btn-secondary:hover {
+  background: #fdf2f8;
 }
 
 .btn-danger {
-  background: #dc2626;
+  background: #fb7185; /* Rose 400 */
   color: white;
+}
+.btn-danger:hover {
+  background: #e11d48;
 }
 
 .actions {
@@ -97,22 +116,24 @@ table {
 
 th,
 td {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #fbcfe8;
   padding: 12px;
   text-align: left;
   font-size: 14px;
 }
 
 th {
-  background: #f9fafb;
+  background: #fce7f3; /* Pink 100 */
+  color: #831843; /* Pink 900 */
 }
 
 .message {
   margin: 12px 0;
   padding: 12px;
   border-radius: 8px;
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: #fdf2f8; /* Pink 50 */
+  color: #be185d; /* Pink 700 */
+  border: 1px solid #fbcfe8;
 }
 
 .error {
