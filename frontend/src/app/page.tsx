@@ -3,13 +3,9 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <main className="container">
-      <div className="card">
-        <h1>Frontend Next.js untuk Express CRUD API</h1>
-        <p>
-          Aplikasi ini adalah contoh frontend Next.js yang mengakses backend
-          Express.js melalui REST API.
-        </p>
-        <div className="actions" style={{ marginTop: 16 }}>
+      <div className="card" style={{ textAlign: "center", marginTop: 50, padding: 40 }}>
+        <h1 style={{ marginBottom: 16 }}>Sistem Informasi Kampus</h1>
+        <div style={{ display: "flex", gap: 16, justifyContent: "center", marginTop: 24 }}>
           <Link href="/mahasiswa">
             <button className="btn-primary">Buka Data Mahasiswa</button>
           </Link>

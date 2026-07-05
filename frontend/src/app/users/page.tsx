@@ -25,17 +25,7 @@ export default function UsersPage() {
   const currentUser = getUser();
   const isAdmin = currentUser?.role === "admin";
 
-  useEffect(() => {
-    if (!isLoggedIn()) {
-      window.location.href = "/login";
-      return;
-    }
-    if (!isAdmin) {
-      window.location.href = "/mahasiswa"; // Redirect non-admins
-      return;
-    }
-    loadUsers();
-  }, [isAdmin]);
+  const [mounted, setMounted] = useState(false);
 
   const loadUsers = async () => {
     try {
@@ -49,6 +39,21 @@ export default function UsersPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setMounted(true);
+    if (!isLoggedIn()) {
+      window.location.href = "/login";
+      return;
+    }
+    if (!isAdmin) {
+      window.location.href = "/mahasiswa"; // Redirect non-admins
+      return;
+    }
+    loadUsers();
+  }, [isAdmin]);
+
+  if (!mounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,10 +123,11 @@ export default function UsersPage() {
       <div className="header">
         <div>
           <h1>Manajemen User</h1>
-          <p>
-            Khusus Admin. 
-            {currentUser && <span> Login sebagai: <strong>{currentUser.name}</strong></span>}
-          </p>
+          {currentUser && (
+            <p style={{ color: "#be185d", marginTop: 4 }}>
+              Login sebagai: <strong>{currentUser.name}</strong>
+            </p>
+          )}
         </div>
         <div className="actions">
           <Link href="/mahasiswa">

@@ -25,13 +25,7 @@ export default function MahasiswaPage() {
   const canCreate = role === "admin" || role === "operator";
   const isAdmin = role === "admin";
 
-  useEffect(() => {
-    if (!isLoggedIn()) {
-      window.location.href = "/login";
-      return;
-    }
-    loadMahasiswa();
-  }, []);
+  const [mounted, setMounted] = useState(false);
 
   const loadMahasiswa = async () => {
     try {
@@ -45,6 +39,17 @@ export default function MahasiswaPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setMounted(true);
+    if (!isLoggedIn()) {
+      window.location.href = "/login";
+      return;
+    }
+    loadMahasiswa();
+  }, []);
+
+  if (!mounted) return null;
 
   const handleSubmit = async (payload: MahasiswaInput) => {
     try {
@@ -83,14 +88,11 @@ export default function MahasiswaPage() {
       <div className="header">
         <div>
           <h1>CRUD Data Mahasiswa</h1>
-          <p>
-            Frontend Next.js yang terhubung ke backend Express.js.
-            {user && (
-              <span>
-                {" "}Login sebagai: <strong>{user.name || user.email}</strong> ({user.role})
-              </span>
-            )}
-          </p>
+          {user && (
+            <p style={{ color: "#be185d", marginTop: 4 }}>
+              Login sebagai: <strong>{user.name || user.email}</strong> ({user.role})
+            </p>
+          )}
         </div>
         <div className="actions">
           {isAdmin && (
