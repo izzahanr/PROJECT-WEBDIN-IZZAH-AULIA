@@ -140,3 +140,70 @@ export async function deleteMahasiswa(id: number): Promise<void> {
   });
   await handleResponse(response);
 }
+
+// ===================== USER API (Pertemuan 15) =====================
+
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: 'admin' | 'operator' | 'viewer';
+  created_at?: string;
+};
+
+export type UserInput = {
+  name: string;
+  email: string;
+  password?: string;
+  role: 'admin' | 'operator' | 'viewer';
+};
+
+export async function getUsers(): Promise<User[]> {
+  const response = await fetch(`${API_URL}/users`, {
+    headers: getAuthHeaders(),
+    cache: 'no-store',
+  });
+  const result = await handleResponse<User[]>(response);
+  return result.data || [];
+}
+
+export async function createUser(payload: UserInput): Promise<void> {
+  const response = await fetch(`${API_URL}/users`, {
+    method: 'POST',
+    headers: {
+      ...getAuthHeaders(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  await handleResponse(response);
+}
+
+export async function updateUser(id: number, payload: Omit<UserInput, 'password'>): Promise<void> {
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    method: 'PUT',
+    headers: {
+      ...getAuthHeaders(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  await handleResponse(response);
+}
+
+export async function deleteUser(id: number): Promise<void> {
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  await handleResponse(response);
+}
+
+export async function resetPassword(id: number): Promise<string> {
+  const response = await fetch(`${API_URL}/users/${id}/reset-password`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+  });
+  const result = await handleResponse<any>(response);
+  return result.temporaryPassword;
+}

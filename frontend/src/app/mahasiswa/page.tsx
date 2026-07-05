@@ -23,6 +23,7 @@ export default function MahasiswaPage() {
   const user = getUser();
   const role = user?.role;
   const canCreate = role === "admin" || role === "operator";
+  const isAdmin = role === "admin";
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -92,6 +93,11 @@ export default function MahasiswaPage() {
           </p>
         </div>
         <div className="actions">
+          {isAdmin && (
+            <Link href="/users">
+              <button className="btn-primary" style={{ marginRight: 8 }}>Manajemen User</button>
+            </Link>
+          )}
           <Link href="/">
             <button className="btn-secondary">Kembali</button>
           </Link>

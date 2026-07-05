@@ -47,3 +47,14 @@ INSERT INTO prodi (nama, kode) VALUES
 INSERT INTO mahasiswa (nim, nama, prodi_id, angkatan, foto) VALUES 
 ('2201001', 'Ahmad Fauzi', 1, 2022, NULL),
 ('2201002', 'Budi Santoso', 2, 2022, NULL);
+
+-- Tabel password_reset_tokens (Pertemuan 15)
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  token_hash VARCHAR(255) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  used_at DATETIME NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
